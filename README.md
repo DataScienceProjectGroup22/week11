@@ -1,5 +1,5 @@
 # Week 11: Final Application Development and Project Report Completion
-link for the webpage 👉 : https://ai-textdetector.streamlit.app
+link for the webpage 👉 : https://ai-textdetector.streamlit.app/
 ## Overview
 During Week 11, the team focused on completing the final stages of the project by integrating the developed AI text detection models into an application interface and finalising the project report. The completed application provides users with an interactive platform to analyse text and identify whether it is human-written or AI-generated.
 
