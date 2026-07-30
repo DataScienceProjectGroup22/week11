@@ -1,10 +1,12 @@
 streamlit
-pandas
 numpy
+pandas
 scikit-learn
 joblib
 torch
 transformers
+tokenizers
+sentencepiece
 tensorflow
 matplotlib
 seaborn
