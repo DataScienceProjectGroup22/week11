@@ -3,11 +3,10 @@ numpy
 pandas
 scikit-learn
 joblib
-torch
-transformers
-tokenizers
-sentencepiece
-tensorflow
+scipy
+nltk
 matplotlib
 seaborn
-nltk
+torch
+transformers
+tensorflow
