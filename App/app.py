@@ -1,4 +1,3 @@
-
 # =============================================================================
 # AI Text Detector — Multi-Model Streamlit Application
 # Supporting: Logistic Regression, Hybrid CNN, RoBERTa
@@ -144,7 +143,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # App/
 #   app.py
 #   models/
-MODEL_DIR = os.path.join(BASE_DIR, "..", "models")
+MODEL_DIR = os.path.join(BASE_DIR, "..", "model")
 
 
 
