@@ -14,8 +14,6 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from datetime import datetime
-
 # ML imports
 import torch
 
@@ -25,9 +23,17 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
 
-# Download required NLTK resources once
-nltk.download("stopwords", quiet=True)
-nltk.download("wordnet", quiet=True)
+# Download required NLTK resources safely
+
+try:
+    nltk.data.find("corpora/stopwords")
+except LookupError:
+    nltk.download("stopwords")
+
+try:
+    nltk.data.find("corpora/wordnet")
+except LookupError:
+    nltk.download("wordnet")
 
 
 warnings.filterwarnings("ignore")
@@ -137,7 +143,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # App/
 #   app.py
 #   models/
-MODEL_DIR = os.path.join(BASE_DIR, "models")
+MODEL_DIR = os.path.join(BASE_DIR, "..", "models")
 
 
 
@@ -290,10 +296,7 @@ def load_roberta_model():
 
     try:
 
-        from transformers import (
-            AutoTokenizer,
-            AutoModelForSequenceClassification
-        )
+        from transformers import AutoTokenizer
 
 
         tokenizer = AutoTokenizer.from_pretrained(
@@ -301,10 +304,13 @@ def load_roberta_model():
         )
 
 
-        model = AutoModelForSequenceClassification.from_pretrained(
-            "roberta-base",
-            num_labels=2
+        model = torch.load(
+            MODEL_CONFIGS["RoBERTa"]["model_path"],
+            map_location=torch.device("cpu")
         )
+
+
+        model.eval()
 
 
         return model, tokenizer
@@ -602,7 +608,8 @@ def predict_cnn(text, model):
 
     else:
 
-        # Add actual CNN preprocessing here
+        # CNN inference pipeline should be added here
+        # Currently using demo probability
         prob_ai = 0.5
 
 
@@ -630,34 +637,53 @@ def predict_cnn(text, model):
 
 def predict_roberta(text, model, tokenizer):
 
-    """
-    RoBERTa inference placeholder.
-
-    Replace with your saved fine-tuned
-    RoBERTa inference pipeline.
-    """
-
-
     if model is None:
 
         prob_ai = 0.5
 
-
     else:
 
-        # Add trained RoBERTa inference here
-        prob_ai = 0.5
+        try:
 
+            inputs = tokenizer(
+                text,
+                return_tensors="pt",
+                truncation=True,
+                padding=True,
+                max_length=512
+            )
+
+
+            with torch.no_grad():
+
+                outputs = model(**inputs)
+
+
+            probabilities = torch.softmax(
+                outputs.logits,
+                dim=1
+            )
+
+
+            prob_human = float(
+                probabilities[0][0]
+            )
+
+
+            prob_ai = float(
+                probabilities[0][1]
+            )
+
+
+        except Exception:
+
+            prob_ai = 0.5
 
 
     prob_human = 1 - prob_ai
 
 
-    label = (
-        1
-        if prob_ai >= 0.5
-        else 0
-    )
+    label = 1 if prob_ai >= 0.5 else 0
 
 
     return (
@@ -666,7 +692,6 @@ def predict_roberta(text, model, tokenizer):
         prob_human,
         []
     )
-
 
 
 # =============================================================================
