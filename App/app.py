@@ -113,7 +113,7 @@ VECTORIZER_PATH = os.path.join(MODEL_DIR, "tfidf_vectorizer.pkl")
 MODEL_INFO = {
     "f1": 0.9645,
     "auc": 0.9943,
-    "inference_time": "<1ms",
+    "inference_time": "<1s",
     "model_size": "5 MB",
     "description": "Linear model, fastest inference, fully interpretable"
 }
